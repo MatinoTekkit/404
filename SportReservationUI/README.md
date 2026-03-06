@@ -1,0 +1,1 @@
+# Slozka pro vue projekt, ak se neudela na to jina repo

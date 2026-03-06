@@ -1,0 +1,7 @@
+﻿services:
+  vpsi:
+    image: vpsi
+    build:
+      context: .
+      dockerfile: vpsi/Dockerfile
+
