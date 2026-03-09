@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using SportReservation.Data;
+using SportReservation.Middlewares;
 using SportReservation.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 builder.Services.AddScoped<ReservationService>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(opts => { opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });
@@ -43,6 +45,7 @@ else
     app.UseHsts();
 }
 
+app.UseMiddleware<AuthMiddleware>();
 app.UseHttpsRedirection();
 
 // SPA frontend in wwwroot
