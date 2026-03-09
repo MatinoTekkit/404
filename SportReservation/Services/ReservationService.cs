@@ -44,9 +44,11 @@ public class ReservationService
         if (downtime)
             throw new Exception("Sportoviště je v tomto čase mimo provoz.");
 
+        var facility = await _db.Facilities.FirstAsync(f => f.Id == facilityId);
+
         // 3. Aktuální ceník
         var priceList = await _db.PriceLists
-            .Where(p => p.FacilityId == facilityId &&
+            .Where(p => p.FacilityTypeId == facility.TypeId &&
                         p.ValidFrom <= startAt &&
                         (p.ValidTo == null || p.ValidTo >= endAt))
             .FirstOrDefaultAsync();

@@ -9,12 +9,12 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; } = null!;
-    public DbSet<FacilityType> FacilityTypes { get; set; } = null!;
-    public DbSet<Facility> Facilities { get; set; } = null!;
-    public DbSet<Reservation> Reservations { get; set; } = null!;
-    public DbSet<PriceList> PriceLists { get; set; } = null!;
-    public DbSet<Downtime> Downtimes { get; set; } = null!;
+    public DbSet<User> Users { get; set; }
+    public DbSet<FacilityType> FacilityTypes { get; set; }
+    public DbSet<Facility> Facilities { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
+    public DbSet<PriceList> PriceLists { get; set; }
+    public DbSet<Downtime> Downtimes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -66,9 +66,9 @@ public class AppDbContext : DbContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<PriceList>()
-            .HasOne(p => p.Facility)
+            .HasOne(p => p.FacilityType)
             .WithMany(f => f.PriceLists)
-            .HasForeignKey(p => p.FacilityId)
+            .HasForeignKey(p => p.FacilityTypeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Downtime>()

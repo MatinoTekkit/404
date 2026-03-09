@@ -16,10 +16,11 @@ public class User
 {
     public Guid Id { get; set; }
     public string Email { get; set; } = null!;
-    public string PasswordHash { get; set; } = null!;
-    public UserRole Role { get; set; }
     public string FullName { get; set; } = null!;
     public DateTime CreatedAt { get; set; }
+    public string PasswordHash { get; set; } = null!;
+    public UserRole Role { get; set; }
+    
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }
 
@@ -28,7 +29,9 @@ public class FacilityType
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
+    
     public virtual ICollection<Facility> Facilities { get; set; } = new List<Facility>();
+    public virtual ICollection<PriceList> PriceLists { get; set; } = new List<PriceList>();
 }
 
 public class Facility
@@ -41,7 +44,6 @@ public class Facility
     public DateTime CreatedAt { get; set; }
 
     public virtual FacilityType Type { get; set; } = null!;
-    public virtual ICollection<PriceList> PriceLists { get; set; } = new List<PriceList>();
     public virtual ICollection<Downtime> Downtimes { get; set; } = new List<Downtime>();
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }
@@ -67,12 +69,12 @@ public class Reservation
 public class PriceList
 {
     public Guid Id { get; set; }
-    public Guid FacilityId { get; set; }
+    public Guid FacilityTypeId { get; set; }
     public DateTime ValidFrom { get; set; }
     public DateTime? ValidTo { get; set; }
     public decimal PricePerHour { get; set; }
 
-    public virtual Facility Facility { get; set; } = null!;
+    public virtual FacilityType FacilityType { get; set; } = null!;
 }
 
 public class Downtime
