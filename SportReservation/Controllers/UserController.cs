@@ -8,10 +8,7 @@ namespace SportReservation.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController(
-    AppDbContext db,
-    UserService userService
-) : ControllerBase
+public class UserController(AppDbContext db, UserService userService) : ControllerBase
 {
     /// <summary>
     /// Returns current logged user
