@@ -68,6 +68,11 @@ app.MapFallbackToFile("index.html");
 app.MapControllers();
 app.UseRouting();
 
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<AppDbContext>()!.Database.Migrate();
+}
+
 if (args.Length > 0)
 {
     using (var scope = app.Services.CreateScope())
