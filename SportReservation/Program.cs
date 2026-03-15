@@ -60,6 +60,7 @@ else
 }
 
 app.UseMiddleware<AuthMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 // SPA frontend in wwwroot
