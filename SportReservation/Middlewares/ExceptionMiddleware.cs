@@ -13,7 +13,7 @@ public class ExceptionMiddleware(RequestDelegate next)
         catch (BadHttpRequestException exception)
         {
             context.Response.StatusCode = exception.StatusCode;
-            await context.Response.WriteAsJsonAsync(new { message = exception.Message });
+            await context.Response.WriteAsync(exception.Message);
         }
     }
 }

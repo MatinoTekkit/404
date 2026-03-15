@@ -57,7 +57,7 @@ public class AuthMiddleware(RequestDelegate next)
         if (!isAuthenticated)
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsJsonAsync(new { message = "Invalid credentials" });
+            await context.Response.WriteAsync("invalid-credentials");
             return;
         }
 
