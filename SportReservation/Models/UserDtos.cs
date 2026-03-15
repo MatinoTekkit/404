@@ -15,9 +15,15 @@ public record UserDto(
 );
 
 public record UserPatchDto(
-    Guid Id,
+    Guid? Id,
     string? Email,
-    string? FullName
+    string? FullName,
+    UpdatePatchPasswordDto? Password
+);
+
+public record UpdatePatchPasswordDto(
+    string? Current,
+    string New
 );
 
 public static class UserDtoExtensions

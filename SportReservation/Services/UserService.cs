@@ -35,10 +35,17 @@ public class UserService(AppDbContext db)
         return user;
     }
 
-    public async Task Update(User user, UserPatchDto patch)
+    public async Task<User> Update(User invoker, UserPatchDto patch)
     {
+        var user = await GetUser(invoker, patch);
+
         if (patch.Email != null)
         {
+            if (await db.Users.AnyAsync(it => it != user && it.Email == user.Email))
+            {
+                throw new BadHttpRequestException("email-already-exists");
+            }
+
             user.Email = patch.Email;
         }
 
@@ -47,7 +54,46 @@ public class UserService(AppDbContext db)
             user.FullName = patch.FullName;
         }
 
+        if (patch.Password != null)
+        {
+            if (invoker.Role == UserRole.Admin)
+            {
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(patch.Password.New);
+            }
+            else
+            {
+                if (patch.Password.Current == null)
+                {
+                    throw new BadHttpRequestException("password-required");
+                }
+
+                if (!BCrypt.Net.BCrypt.Verify(patch.Password.Current, user.PasswordHash))
+                {
+                    throw new BadHttpRequestException("wrong-password");
+                }
+
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(patch.Password.New);
+            }
+        }
+
         db.Update(user);
         await db.SaveChangesAsync();
+        return user;
+    }
+
+    private async Task<User> GetUser(User invoker, UserPatchDto patch)
+    {
+        if (patch.Id == null || patch.Id == invoker.Id)
+        {
+            return invoker;
+        }
+
+        if (invoker.Role != UserRole.Admin)
+        {
+            throw new BadHttpRequestException("forbidden", StatusCodes.Status403Forbidden);
+        }
+
+        var user = await db.Users.FirstOrDefaultAsync(it => it.Id == patch.Id);
+        return user ?? throw new BadHttpRequestException("not-found", StatusCodes.Status404NotFound);
     }
 }

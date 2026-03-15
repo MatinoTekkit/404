@@ -23,14 +23,7 @@ public class UserController(AppDbContext db, UserService userService) : Controll
     [HttpPatch]
     public async Task<IActionResult> Update([FromBody] UserPatchDto patch)
     {
-        var user = await db.Users.FindAsync(patch.Id);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        await userService.Update(user, patch);
+        var user = await userService.Update(HttpContext.LoggedUser(), patch);
         return Ok(user.ToDto());
     }
 }
